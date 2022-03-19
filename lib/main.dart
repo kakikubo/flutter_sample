@@ -11,7 +11,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      initialRoute: '/',
+      routes: {
+        '/': (context) => FirstPage(),
+        '/second': (context) => SecondPage(),
+      },
       theme: ThemeData(
         // This is the theme of your application.
         //
@@ -24,7 +28,6 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: const FirstPage(),
     );
   }
 }
@@ -39,14 +42,10 @@ class FirstPage extends StatelessWidget {
       body: Center(
         child: ElevatedButton(
           onPressed: () async {
-            var message = await Navigator.push(
+            var message = await Navigator.pushNamed(
               context,
-              MaterialPageRoute(
-                  builder: (context) {
-                    return const SecondPage(
-                        messageFromFirst: 'messageFromFirst');
-                  },
-                  fullscreenDialog: true),
+              '/second',
+              arguments: 'messageFromFirst',
             );
             print(message);
           },
@@ -58,14 +57,16 @@ class FirstPage extends StatelessWidget {
 }
 
 class SecondPage extends StatelessWidget {
-  final String? messageFromFirst;
-  const SecondPage({Key? key, required this.messageFromFirst})
-      : super(key: key);
+  // final String? messageFromFirst;
+  //
+  // const SecondPage({Key? key, this.messageFromFirst}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    var messageFromFirst = ModalRoute.of(context)?.settings.arguments;
+    print(messageFromFirst);
     return Scaffold(
-      appBar: AppBar(title: Text(messageFromFirst!)),
+      appBar: AppBar(title: Text(messageFromFirst as String)),
       body: Center(
         child: ElevatedButton(
           onPressed: () {
