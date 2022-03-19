@@ -1,0 +1,69 @@
+# This file configures the analyzer, which statically analyzes Dart code to
+# check for errors, warnings, and lints.
+#
+# The issues identified by the analyzer are surfaced in the UI of Dart-enabled
+# IDEs (https://dart.dev/tools#ides-and-editors). The analyzer can also be
+# invoked from the command line by running `flutter analyze`.
+
+# The following line activates a set of recommended lints for Flutter apps,
+# packages, and plugins designed to encourage good coding practices.
+include: package:flutter_lints/flutter.yaml
+
+linter:
+  # The lint rules applied to this project can be customized in the
+  # section below to disable rules from the `package:flutter_lints/flutter.yaml`
+  # included above or to enable additional rules. A list of all available lints
+  # and their documentation is published at
+  # https://dart-lang.github.io/linter/lints/index.html.
+  #
+  # Instead of disabling a lint rule for the entire project in the
+  # section below, it can also be suppressed for a single line of code
+  # or a specific dart file by using the `// ignore: name_of_lint` and
+  # `// ignore_for_file: name_of_lint` syntax on the line or in the file
+  # producing the lint.
+  rules:
+    # avoid_print: false  # Uncomment to disable the `avoid_print` rule
+    # prefer_single_quotes: true  # Uncomment to enable the `prefer_single_quotes` rule
+    # Styles
+    - camel_case_types
+    - library_names
+    - file_names
+    - non_constant_identifier_names
+    - constant_identifier_names
+    - directives_ordering
+    # DOCUMENTATION
+    - package_api_docs
+    - comment_references
+    # USAGE
+    - prefer_adjacent_string_concatenation
+    - prefer_interpolation_to_compose_strings
+    - unnecessary_brace_in_string_interps
+    - prefer_collection_literals
+    - avoid_function_literals_in_foreach_calls
+    - prefer_function_declarations_over_variables
+    - unnecessary_lambdas
+    - unnecessary_getters_setters
+    - unnecessary_this
+    - prefer_initializing_formals
+    - avoid_catches_without_on_clauses
+    # DESIGN
+    - use_to_and_as_if_applicable
+    - one_member_abstracts
+    - avoid_classes_with_only_static_members
+    - prefer_final_fields
+    - use_setters_to_change_properties
+    - avoid_setters_without_getters
+    - avoid_returning_null
+    - avoid_returning_this
+    - prefer_generic_function_type_aliases
+    - avoid_private_typedef_functions
+    - avoid_positional_boolean_parameters
+    - hash_and_equals
+    - avoid_null_checks_in_equality_operators
+    - prefer_const_constructors
+    - prefer_const_literals_to_create_immutables
+    - cancel_subscriptions
+    - close_sinks
+
+# Additional information about this file can be found at
+# https://dart.dev/guides/language/analysis-options
