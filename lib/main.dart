@@ -38,15 +38,17 @@ class FirstPage extends StatelessWidget {
       appBar: AppBar(title: const Text('First Page')),
       body: Center(
         child: ElevatedButton(
-          onPressed: () {
-            Navigator.push(
+          onPressed: () async {
+            var message = await Navigator.push(
               context,
               MaterialPageRoute(
                   builder: (context) {
-                    return const SecondPage();
+                    return const SecondPage(
+                        messageFromFirst: 'messageFromFirst');
                   },
                   fullscreenDialog: true),
             );
+            print(message);
           },
           child: const Text('Next Page'),
         ),
@@ -56,16 +58,18 @@ class FirstPage extends StatelessWidget {
 }
 
 class SecondPage extends StatelessWidget {
-  const SecondPage({Key? key}) : super(key: key);
+  final String? messageFromFirst;
+  const SecondPage({Key? key, required this.messageFromFirst})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Second Page')),
+      appBar: AppBar(title: Text(messageFromFirst!)),
       body: Center(
         child: ElevatedButton(
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.pop(context, 'Go Back from SecondPage');
           },
           child: const Text('Go back'),
         ),
