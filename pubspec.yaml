@@ -88,3 +88,13 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+
+analyzer:
+  strong-mode:
+    implicit-casts: false
+    implicit-dynamic: false
+  errors:
+    - lib/l10n/*.dart
+linter:
+  rules:
+    - hash_and_equals
