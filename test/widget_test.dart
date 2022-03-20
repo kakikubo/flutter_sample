@@ -26,6 +26,12 @@ void main() {
 
     // Verify that our counter has incremented.
     expect(nextButton, findsNothing);
-    expect(find.text('Go back'), findsOneWidget);
+    expect(backButton, findsOneWidget);
+
+    await tester.tap(backButton);
+    await tester.pumpAndSettle();
+
+    expect(nextButton, findsOneWidget);
+    expect(backButton, findsNothing);
   });
 }
