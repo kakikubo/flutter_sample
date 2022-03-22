@@ -10,6 +10,40 @@ extension MyFancyList<T> on List<T> {
       <List<T>>[this.sublist(0, at), this.sublist(at)];
 }
 
+// 後述のMixinで使用
+mixin Greet1 {
+  // 4.
+  String hello() => "hello, greet1";
+}
+mixin Greet2 {
+  // 3.
+  String hello() => "hello, greet2";
+}
+mixin Greet3 {
+  // 2.
+  String hello() => "hello, greet3";
+}
+
+class Ancestor {
+  // 6.
+  String hello() => "I am a Ancestor";
+}
+
+class Parent extends Ancestor {
+  // 5.
+  String hello() => "I am a Parent";
+}
+
+class Child extends Parent with Greet1, Greet2, Greet3 {
+  // 1.
+  // String hello() => "I am a child";
+}
+
+// 後述のCallable Classe
+class WannabeFunction {
+  String call(String a, String b, String c) => '$a $b $c!';
+}
+
 void main() {
   group('変数', () {
     test('デフォルトはnullである', () {
@@ -176,6 +210,25 @@ void main() {
         ["a", "b"],
         ["c"]
       ]);
+    });
+  });
+  group('例外をなげる', () {
+    test('ArgumentError', () {
+      expect(() => throw FormatException("Expected Good Life"),
+          throwsFormatException);
+    });
+  });
+  group('mixin', () {
+    test('定義を一番最後にしたMixinが優先される', () {
+      var message = Child().hello();
+      expect(message, "hello, greet3");
+    });
+  });
+  group('Callable Classe', () {
+    test('インスタンスを関数のように呼べる', () {
+      var instance = WannabeFunction();
+      var out = instance("Hi", "there,", "gang");
+      expect(out, "Hi there, gang!");
     });
   });
 }
