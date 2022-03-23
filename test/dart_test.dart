@@ -44,6 +44,30 @@ class WannabeFunction {
   String call(String a, String b, String c) => '$a $b $c!';
 }
 
+// 後述のinitializer list
+class Employee extends Person {
+  final String message;
+
+  Employee.fromJson(Map data)
+      : message = "hello",
+        super.fromJson(data) {
+    print(message);
+    print('in Employee');
+  }
+}
+
+class Person {
+  final String firstName;
+
+  Person.fromJson(Map data) : this.firstName = "Bob" {
+    print(firstName);
+    print('in Person');
+  }
+}
+
+// 後述のenum
+enum Color { red, green, blue }
+
 void main() {
   group('変数', () {
     test('デフォルトはnullである', () {
@@ -230,5 +254,34 @@ void main() {
       var out = instance("Hi", "there,", "gang");
       expect(out, "Hi there, gang!");
     });
+  });
+  group('initializer list', () {
+    test('コンストラクタ呼び出しでinitializer list が適用されていること', () {
+      expect(Employee.fromJson({}).message, "hello");
+    });
+  });
+  group('Enum', () {
+    test('indexは0からはじまる', () {
+      expect(Color.red.index, 0);
+    });
+    test('valuesプロパティを利用して値を取得する', () {
+      List<Color> colors = Color.values;
+      expect(colors[2], Color.blue);
+    });
+    group('列挙型', () {
+      test('列挙型はswitch文ですべての列挙値を条件にいれないと警告がでる', () {
+        var aColor = Color.blue;
+        switch (aColor) {
+          case Color.red:
+            print('Red as roses!');
+            break;
+          case Color.green:
+            print('Green as grass!');
+            break;
+          default:
+            print(aColor);
+        }
+      });
+    }, skip: "これはうまくいってない気がするのとWarningのテストって書けるんでしたっけ");
   });
 }
