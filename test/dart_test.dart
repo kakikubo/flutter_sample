@@ -68,6 +68,16 @@ class Person {
 // 後述のenum
 enum Color { red, green, blue }
 
+// 後述のIterable
+class MyStrings extends Iterable<String> {
+  final List<String> strings;
+
+  MyStrings(this.strings);
+
+  @override
+  Iterator<String> get iterator => strings.iterator;
+}
+
 void main() {
   group('変数', () {
     test('デフォルトはnullである', () {
@@ -283,5 +293,27 @@ void main() {
         }
       });
     }, skip: "これはうまくいってない気がするのとWarningのテストって書けるんでしたっけ");
+  });
+  group('Iterable', (){
+    final myStrings = MyStrings([
+      'one',
+      'two',
+      'three',
+    ]);
+    test('Iterableを継承したクラスはforループが使える',(){
+      var strList = [];
+      for (final str in myStrings){
+        strList.add(str);
+      }
+      expect(strList, myStrings);
+    });
+    test('mapだって使える', (){
+      final lengths = myStrings.map((s) => s.length);
+      var lengthList = [];
+      for (final length in lengths) {
+        lengthList.add(length);
+      }
+      expect(lengthList, [3, 3, 5]);
+    });
   });
 }
