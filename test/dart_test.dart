@@ -352,7 +352,7 @@ void main() {
       fetchDoubles(1, 10).listen(print);
     });
   });
-  group('Conditional member access operator', (){
+  group('Conditional member access operator(save navigation operatorともいう)', (){
     String? target = null;
     test('nullであってもエラーにならない', (){
       var length = target?.trim()?.toLowerCase()?.length ?? 0;
@@ -362,6 +362,29 @@ void main() {
       target = "test string   ";
       var length = target?.trim()?.toLowerCase()?.length ?? 0;
       expect(length, 11);
+    });
+  });
+  group('spread operator', (){
+    test('リストを別のリストに挿入する', (){
+      var list = [1,2,3];
+      var list2 = [0, ...list];
+      expect(list2.length, 4);
+    });
+    test('nullの可能性があるリストはnull-aware Spread Operatorでエラーを回避できる', (){
+      var list = null;
+      var list2 = [0, ...?list];
+      expect(list2.length, 1);
+    });
+  });
+  group('Collection for',(){
+    test('リスト作成時に別のリストを操作しながらリストに追加する処理', (){
+      var listOfInts = [1,2,3];
+      var listOfStrings = [
+        '#0',
+        for (var i in listOfInts) '#$i'
+      ];
+      expect(listOfStrings[1], '#1');
+      expect(listOfStrings.length, 4);
     });
   });
 }
