@@ -78,6 +78,27 @@ class MyStrings extends Iterable<String> {
   Iterator<String> get iterator => strings.iterator;
 }
 
+// 後述の同期ジェネレーター
+Iterable<int> getRange(int start, int end) sync* {
+  print('called getRange');
+  for (int i = start; i <= end; i++){
+    print('before yield');
+    yield i;
+    print('after yield');
+    print('\n');
+  }
+}
+// 後述の非同期ジェネレーター
+Stream<int> fetchDoubles(int start, int end) async* {
+  for (int i = start; i <= end; i++) {
+    yield await fetchDouble(i);
+  }
+}
+Future<int> fetchDouble(int val){
+  return Future.delayed(Duration(seconds: 1)).then((_){
+    return val * 2;
+  });
+}
 void main() {
   group('変数', () {
     test('デフォルトはnullである', () {
@@ -314,6 +335,33 @@ void main() {
         lengthList.add(length);
       }
       expect(lengthList, [3, 3, 5]);
+    });
+  });
+  group('同期ジェネレーターをつかう', (){
+    final numbers = getRange(1, 10);
+    test('イテレーター同様にループさせる(テストになってない)', (){
+      for (int val in numbers){
+        print('before print val');
+        print(val);
+        print('after print val');
+      }
+    });
+  });
+  group('非同期ジェネレーターもつかう', (){
+    test('ループさせてみる(テストになってない)', (){
+      fetchDoubles(1, 10).listen(print);
+    });
+  });
+  group('Conditional member access operator', (){
+    String? target = null;
+    test('nullであってもエラーにならない', (){
+      var length = target?.trim()?.toLowerCase()?.length ?? 0;
+      expect(length, 0);
+    });
+    test('nullでない場合は問題なく処理される', (){
+      target = "test string   ";
+      var length = target?.trim()?.toLowerCase()?.length ?? 0;
+      expect(length, 11);
     });
   });
 }
