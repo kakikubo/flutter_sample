@@ -81,24 +81,27 @@ class MyStrings extends Iterable<String> {
 // 後述の同期ジェネレーター
 Iterable<int> getRange(int start, int end) sync* {
   print('called getRange');
-  for (int i = start; i <= end; i++){
+  for (int i = start; i <= end; i++) {
     print('before yield');
     yield i;
     print('after yield');
     print('\n');
   }
 }
+
 // 後述の非同期ジェネレーター
 Stream<int> fetchDoubles(int start, int end) async* {
   for (int i = start; i <= end; i++) {
     yield await fetchDouble(i);
   }
 }
-Future<int> fetchDouble(int val){
-  return Future.delayed(Duration(seconds: 1)).then((_){
+
+Future<int> fetchDouble(int val) {
+  return Future.delayed(Duration(seconds: 1)).then((_) {
     return val * 2;
   });
 }
+
 void main() {
   group('変数', () {
     test('デフォルトはnullである', () {
@@ -315,20 +318,20 @@ void main() {
       });
     }, skip: "これはうまくいってない気がするのとWarningのテストって書けるんでしたっけ");
   });
-  group('Iterable', (){
+  group('Iterable', () {
     final myStrings = MyStrings([
       'one',
       'two',
       'three',
     ]);
-    test('Iterableを継承したクラスはforループが使える',(){
+    test('Iterableを継承したクラスはforループが使える', () {
       var strList = [];
-      for (final str in myStrings){
+      for (final str in myStrings) {
         strList.add(str);
       }
       expect(strList, myStrings);
     });
-    test('mapだって使える', (){
+    test('mapだって使える', () {
       final lengths = myStrings.map((s) => s.length);
       var lengthList = [];
       for (final length in lengths) {
@@ -337,52 +340,49 @@ void main() {
       expect(lengthList, [3, 3, 5]);
     });
   });
-  group('同期ジェネレーターをつかう', (){
+  group('同期ジェネレーターをつかう', () {
     final numbers = getRange(1, 10);
-    test('イテレーター同様にループさせる(テストになってない)', (){
-      for (int val in numbers){
+    test('イテレーター同様にループさせる(テストになってない)', () {
+      for (int val in numbers) {
         print('before print val');
         print(val);
         print('after print val');
       }
     });
   });
-  group('非同期ジェネレーターもつかう', (){
-    test('ループさせてみる(テストになってない)', (){
+  group('非同期ジェネレーターもつかう', () {
+    test('ループさせてみる(テストになってない)', () {
       fetchDoubles(1, 10).listen(print);
     });
   });
-  group('Conditional member access operator(save navigation operatorともいう)', (){
+  group('Conditional member access operator(save navigation operatorともいう)', () {
     String? target = null;
-    test('nullであってもエラーにならない', (){
+    test('nullであってもエラーにならない', () {
       var length = target?.trim()?.toLowerCase()?.length ?? 0;
       expect(length, 0);
     });
-    test('nullでない場合は問題なく処理される', (){
+    test('nullでない場合は問題なく処理される', () {
       target = "test string   ";
       var length = target?.trim()?.toLowerCase()?.length ?? 0;
       expect(length, 11);
     });
   });
-  group('spread operator', (){
-    test('リストを別のリストに挿入する', (){
-      var list = [1,2,3];
+  group('spread operator', () {
+    test('リストを別のリストに挿入する', () {
+      var list = [1, 2, 3];
       var list2 = [0, ...list];
       expect(list2.length, 4);
     });
-    test('nullの可能性があるリストはnull-aware Spread Operatorでエラーを回避できる', (){
+    test('nullの可能性があるリストはnull-aware Spread Operatorでエラーを回避できる', () {
       var list = null;
       var list2 = [0, ...?list];
       expect(list2.length, 1);
     });
   });
-  group('Collection for',(){
-    test('リスト作成時に別のリストを操作しながらリストに追加する処理', (){
-      var listOfInts = [1,2,3];
-      var listOfStrings = [
-        '#0',
-        for (var i in listOfInts) '#$i'
-      ];
+  group('Collection for', () {
+    test('リスト作成時に別のリストを操作しながらリストに追加する処理', () {
+      var listOfInts = [1, 2, 3];
+      var listOfStrings = ['#0', for (var i in listOfInts) '#$i'];
       expect(listOfStrings[1], '#1');
       expect(listOfStrings.length, 4);
     });
