@@ -103,6 +103,51 @@ Future<int> fetchDouble(int val) {
 }
 
 void main() {
+  group("テストの基本",
+      /* https://github.com/kikuchy/all-about-test-of-flutter/blob/master/test/basic_test.dart より引用 */ () {
+    test("第一引数にテストの説明を記述", /* 第二引数にテストケースとして登録する関数を記述します */ () {
+      final actual = "処理で得られた結果をexpectの第一引数に";
+      final matcher = isNot(equals("期待する条件を第二引数に"));
+      expect(actual, matcher);
+    });
+    test("非同期処理のテストはasync関数を第2引数に渡せば良い", () async {
+      final task = Future.delayed(Duration(seconds: 1), () => "1秒後に値が返ります");
+      expect(await task, "1秒後に値が返ります");
+    });
+    test("飛ばしたいテストケースにはskipの設定をします", () {},
+        skip: "飛ばす理由を書きましょう。「〇〇が出来上がらないと実装できないから」とか");
+    test("skip関連で言えば", () {
+      expect("実はexpect単位でもskipを設定できます", "理由を書いておきましょう",
+          skip: "まだここのメソッドだけスタブだから");
+    });
+    test("タイムアウト設定もできます", () async {
+      final task =
+          Future.delayed(Duration(seconds: 1), () => "100ms以内に終わらせろとかシビアすぎ");
+      expect(await task, "というわけでこのテストはfail");
+    },
+        timeout: Timeout(Duration(milliseconds: 100)),
+        skip: "なんかタイムアウト云々以前に比較がうまくいってない気がするのでskip");
+    test("retryで指定回数だけテストの再実行ができます", () {
+      expect("不安定なテストは減らすのがベストですが,そうもいかないときに使う", anything);
+    }, retry: 3);
+    test("テストケースにはtagをつけられる", () {
+      expect("tag付きテストケースは dart_test.yamlの設定でタグ毎にタイムアウトやスキップの設定が可能", anything);
+    }, tags: "fail");
+    test("tagは複数設定できる", () async {
+      final task =
+          Future.delayed(Duration(minutes: 60), () => "こんな激重タスクは実行したくないときとかに");
+      expect(await task,
+          isNot(equals("dart_test.yaml の設定でtakes_long_timeタグ付きテストを除外している")));
+    }, tags: ["fail", "takes_long_time"], skip: "本当に実行するとおもすぎるのでスキップ");
+    group("階層構造を作りたい時にはgroup()", () {
+      group("いくらでもネストできます", () {
+        test("IntelliJのテスト結果表示でも階層的に表示されます", () {
+          expect('ほらね', anything);
+        });
+      });
+      group("groupもtest同様にskipできます", () {}, skip: "まだ何もできてない");
+    });
+  });
   group('変数', () {
     test('デフォルトはnullである', () {
       int? lineCount;
